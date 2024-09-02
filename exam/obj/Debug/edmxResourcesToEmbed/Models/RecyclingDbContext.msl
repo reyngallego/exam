@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="RecyclingDBModelStoreContainer" CdmEntityContainer="RecyclingDBEntities">
+    <EntitySetMapping Name="RecyclableItems">
+      <EntityTypeMapping TypeName="RecyclingDBModel.RecyclableItem">
+        <MappingFragment StoreEntitySet="RecyclableItem">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="RecyclableTypeId" ColumnName="RecyclableTypeId" />
+          <ScalarProperty Name="Weight" ColumnName="Weight" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+          <ScalarProperty Name="ComputedRate" ColumnName="ComputedRate" />
+          <ScalarProperty Name="ItemDescription" ColumnName="ItemDescription" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RecyclableTypes">
+      <EntityTypeMapping TypeName="RecyclingDBModel.RecyclableType">
+        <MappingFragment StoreEntitySet="RecyclableType">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+          <ScalarProperty Name="MinKg" ColumnName="MinKg" />
+          <ScalarProperty Name="MaxKg" ColumnName="MaxKg" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

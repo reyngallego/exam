@@ -1,0 +1,107 @@
+﻿@model exam.Models.RecyclableItem
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create Item</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>RecyclableItem</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RecyclableTypeId, "Recyclable Type", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("RecyclableTypeId", (SelectList)ViewBag.RecyclableTypeId, "Select Type", new { @class = "form-control", @id = "recyclableTypeDropdown" })
+                @Html.ValidationMessageFor(model => model.RecyclableTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Weight, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Weight, new { htmlAttributes = new { @class = "form-control", @id = "weightInput" } })
+                @Html.ValidationMessageFor(model => model.Weight, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Rate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.Rate, new { @class = "form-control", @id = "rateInput", @readonly = "readonly" })
+                @Html.ValidationMessageFor(model => model.Rate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ItemDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ItemDescription, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ItemDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Total Value", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" id="totalValue" class="form-control" readonly />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function() {
+            // Function to update the rate and compute total value
+            function updateRateAndTotal() {
+                var typeId = $('#recyclableTypeDropdown').val();
+                var weight = parseFloat($('#weightInput').val()) || 0;
+
+                if (typeId) {
+                    // AJAX request to get the rate based on selected type
+                    $.ajax({
+                        url: '@Url.Action("GetRateByTypeId", "RecyclableItems")', // Action method to get the rate
+                        type: 'GET',
+                        data: { id: typeId },
+                        success: function(data) {
+                            var rate = parseFloat(data.rate) || 0;
+                            $('#rateInput').val(rate.toFixed(2)); // Set the rate
+                            $('#totalValue').val((rate * weight).toFixed(2)); // Compute and set the total value
+                        },
+                        error: function() {
+                            alert('Unable to fetch rate. Please try again.');
+                        }
+                    });
+                } else {
+                    $('#rateInput').val(''); // Clear rate if no type is selected
+                    $('#totalValue').val(''); // Clear total value if no type is selected
+                }
+            }
+
+            // Attach event handlers to update rate and total value when changes occur
+            $('#recyclableTypeDropdown').change(updateRateAndTotal);
+            $('#weightInput').on('input', updateRateAndTotal);
+
+            // Initialize total value on page load
+            updateRateAndTotal();
+        });
+    </script>
+}
